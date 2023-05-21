@@ -4,3 +4,4 @@
 
 # [20.05.2023] setup of the repository, added files for homework 2 "FLask"
 # [21.05.2023] changes for the generate-users task - main.py, template
+# [21.05.2023] changes for the average height/weight from the csv file

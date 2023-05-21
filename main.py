@@ -1,5 +1,7 @@
+import csv
 import os
 import random
+from statistics import mean
 
 from faker import Faker
 from faker.providers.person.uk_UA import Provider
@@ -48,6 +50,62 @@ def return_fake_users():
         return render_template('generate_users.html', file_content=users_list)
 
 
+@app.route('/mean/')
+def calculate_average():
+    rows = []
+
+    with open('hw.csv') as file_obj:
+        # Skips the heading
+        heading = next(file_obj)
+
+        reader_obj = csv.reader(file_obj)
+
+        for i in reader_obj:
+            rows.append(i)
+
+    indexes = rows_divider(rows, 0)
+    heights_inches = rows_divider(rows, 1)
+    weights_pounds = rows_divider(rows, 2)
+
+    heights_cm = inches_to_cm(heights_inches)
+    weights_kg = pounds_to_kg(weights_pounds)
+
+    average_height = round(mean(heights_cm), 2)
+    average_mass = round(mean(weights_kg), 2)
+
+    with app.app_context():
+        return render_template('average.html', last_index=indexes[-1], average_height=average_height,
+                               average_mass=average_mass)
+
+
+def inches_to_cm(inches_values):
+    cm_values = []
+
+    for value in inches_values:
+        cm_values.append(round(float(value) * 2.54, 2))
+
+    return cm_values
+
+
+def pounds_to_kg(pounds_values):
+    kg_values = []
+
+    for value in pounds_values:
+        kg_values.append(round(float(value) / 2.205, 2))
+
+    return kg_values
+
+
+def rows_divider(rows, index_number):
+    column = []
+
+    for i in rows:
+        if len(i) > 0:
+            column.append(i[index_number])
+
+    return column
+
+
 def write_to_file(*args):
     with open('users.txt', 'a') as f:
         list_to_write = [str(x) for x in [*args]]
@@ -60,3 +118,6 @@ def read_and_return():
         file_content = f.readlines()
         return file_content
 
+
+if __name__ == '__main__':
+    calculate_average()

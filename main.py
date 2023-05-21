@@ -20,10 +20,10 @@ def hello_world():
 
 @app.route('/requirements/')
 def return_requirements_file():
-    try:
-        return send_file('/home/dolia/hillel_flask_homework/hillel_flask_homework/requirements.txt')
-    except Exception as e:
-        return str(e)
+    with open("requirements.txt", 'r') as f:
+        file_content = f.readlines()
+        with app.app_context():
+            return render_template('requirements.html', file_content=file_content)
 
 
 @app.route('/generate-users/')
@@ -37,7 +37,7 @@ def return_fake_users():
             file.truncate(0)
 
     # GET parameter for a number of users
-    number = int(request.args.get("count"))
+    number = int(request.args.get("count", 100))
 
     # Generate first name in Ukrainian + email first_name@fake_domain
     for i in range(number):

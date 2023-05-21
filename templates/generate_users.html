@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+    <table>
+            {% for i in file_content %}
+            <tr>
+                <td> <b>{{ i.split()[0] }}</b> </td>
+                <td> {{ i.split()[1] }} </td>
+            </tr>
+            {% else %}
+                Please add some users first
+            {% endfor %}
+    </table>
+</body>
+</html>

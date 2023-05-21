@@ -1,6 +1,7 @@
 import csv
 import os
 import random
+import requests
 from statistics import mean
 
 from faker import Faker
@@ -78,6 +79,19 @@ def calculate_average():
                                average_mass=average_mass)
 
 
+@app.route('/space/')
+def return_astronauts_number():
+    r = requests.get(' http://api.open-notify.org/astros.json')
+    # Dumb solution
+    number_basic = (r.json()["number"])
+
+    # Okay, let's do something and count parameter "people"
+    number_counted = (len(r.json()["people"]))
+
+    with app.app_context():
+        return render_template('astronauts.html', number_basic=number_basic, number_counted=number_counted)
+
+
 def inches_to_cm(inches_values):
     cm_values = []
 
@@ -117,7 +131,3 @@ def read_and_return():
     with open("users.txt", 'r') as f:
         file_content = f.readlines()
         return file_content
-
-
-if __name__ == '__main__':
-    calculate_average()
